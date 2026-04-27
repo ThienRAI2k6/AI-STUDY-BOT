@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng nhập - AI Study Master</title>
+  
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Inter', sans-serif;
+            /* Thay đổi ảnh nền ở đây */
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), 
+                        url('/static/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .login-card {
+            /* Làm trong suốt bằng RGBA và hiệu ứng mờ backdrop-filter */
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 320px;
+            color: white;
+        }
+
+        h2 { margin-bottom: 25px; font-weight: 700; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input::placeholder { color: rgba(255, 255, 255, 0.5); }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+
+        button:hover { transform: scale(1.02); }
+
+        p { margin-top: 20px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
+        a { color: #818cf8; text-decoration: none; font-weight: 600; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="login-card">
+        <h2>Đăng nhập</h2>
+        <form method="POST">
+            <input name="username" placeholder="Tên đăng nhập" required>
+            <input name="password" type="password" placeholder="Mật khẩu" required>
+            <button type="submit">Vào học ngay 🚀</button>
+        </form>
+        <p>Chưa có tài khoản? <a href="/register">Đăng ký tại đây</a></p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <script>
+          {% for category, message in messages %}
+            Swal.fire({
+              title: 'Thông báo',
+              text: "{{ message }}",
+              icon: "{{ 'success' if category == 'success' else 'error' }}",
+              background: '#1e293b',
+              color: '#f8fafc',
+              confirmButtonColor: '#6366f1'
+            });
+          {% endfor %}
+        </script>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>
