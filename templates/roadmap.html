@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Roadmap</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background: #0f172a; color: white; margin: 0; font-family: 'Inter', sans-serif; }
+        
+        .roadmap-container {
+            display: flex;
+            gap: 80px; /* Khoảng cách giữa các Level */
+            padding: 50px;
+            overflow-x: auto;
+            min-height: 80vh;
+            align-items: center;
+        }
+
+        .level-col {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            position: relative;
+        }
+
+        .level-name {
+            position: absolute;
+            top: -40px;
+            width: 100%;
+            text-align: center;
+            color: #6366f1;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .node-card {
+            width: 200px;
+            padding: 20px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 2px solid #334155;
+            border-radius: 16px;
+            text-align: center;
+            position: relative;
+            transition: 0.3s;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            z-index: 2;
+        }
+
+        /* Đường kẻ rẽ nhánh nối sang phải */
+        .node-card::after {
+            content: "";
+            position: absolute;
+            right: -80px;
+            top: 50%;
+            width: 80px;
+            height: 2px;
+            background: #334155;
+            z-index: -1;
+        }
+
+        /* Cột cuối cùng không có đường kẻ */
+        .level-col:last-child .node-card::after { display: none; }
+
+        .node-card:hover {
+            transform: scale(1.05);
+            border-color: #6366f1;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .node-card.completed {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .node-card.completed i { color: #10b981; }
+        .node-card h4 { margin: 10px 0 5px 0; font-size: 1rem; }
+        .node-card p { margin: 0; font-size: 0.75rem; color: #94a3b8; }
+
+        .status-icon {
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+            color: #334155;
+        }
+
+        header { padding: 30px 50px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .back-btn { color: #94a3b8; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body class="roadmap-page">
+
+    <header>
+        <a href="/dashboard" class="back-btn"><i class="fas fa-arrow-left"></i> Quay lại Dashboard</a>
+        <h1 style="margin-top: 20px;"><i class="fas fa-network-wired"></i>Learning Roadmap</h1>
+        <div style="display: flex; gap: 15px; margin-bottom: 40px; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 15px;">
+    <a href="/roadmap/toan" class="tab-btn {% if current_sub == 'toan' %}active{% endif %}">Toán Học</a>
+    <a href="/roadmap/vatly" class="tab-btn {% if current_sub == 'vatly' %}active{% endif %}">Vật Lý</a>
+    <a href="/roadmap/tienganh" class="tab-btn {% if current_sub == 'tienganh' %}active{% endif %}">Tiếng Anh</a>
+</div>
+
+<style>
+    .tab-btn {
+        padding: 10px 25px;
+        text-decoration: none;
+        color: #94a3b8;
+        border-radius: 10px;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .tab-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+    .tab-btn.active {
+        background: #6366f1;
+        color: white;
+        box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+    }
+</style>
+        <p style="color: #94a3b8;">Nhấn vào từng ô để đánh dấu hoàn thành kiến thức</p>
+    </header>
+
+<div class="roadmap-container">
+    {% for level in roadmap %}
+    <div class="level-col">
+        <div class="level-name">{{ level.level }}</div>
+        
+        {% for item in level['items'] %}
+        <div class="node-group">
+            <a href="/toggle_roadmap/{{ item.id }}" class="node-card main-node {% if item.id in completed %}completed{% endif %}">
+                <div class="status-icon">
+                    <i class="fas {% if item.id in completed %}fa-check-circle{% else %}fa-circle-notch{% endif %}"></i>
+                </div>
+                <h4>{{ item.name }}</h4>
+            </a>
+
+            <div class="sub-nodes-wrap">
+                {% for sub in item.sub_items %}
+                <a href="/toggle_roadmap/{{ sub.id }}" class="sub-node {% if sub.id in completed %}completed{% endif %}">
+                    <i class="fas {% if sub.id in completed %}fa-check-circle{% else %}fa-circle{% endif %}"></i>
+                    {{ sub.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>

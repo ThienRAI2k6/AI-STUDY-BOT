@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký - AI Study Master</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Inter', sans-serif;
+            /* ĐẢM BẢO FILE background.jpg NẰM TRONG THƯ MỤC static */
+            background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)), 
+                        url('/static/background.jpg') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            width: 350px; /* Tăng nhẹ độ rộng để thoải mái hơn */
+            color: white;
+        }
+
+        h2 { margin-bottom: 25px; font-weight: 700; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        input::placeholder { color: rgba(255, 255, 255, 0.5); }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: all 0.3s ease;
+        }
+
+        button:hover:not(:disabled) { transform: scale(1.02); box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+        
+        button:disabled { 
+            background: #4b5563; 
+            cursor: not-allowed; 
+            opacity: 0.5; 
+        }
+
+        p { margin-top: 20px; font-size: 0.9rem; color: rgba(255, 255, 255, 0.7); }
+        a { color: #818cf8; text-decoration: none; font-weight: 600; }
+        
+        #error-message {
+            color: #fb7185;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="login-card">
+        <h2>Đăng ký tài khoản</h2>
+        <form method="POST" id="regForm" onsubmit="return validatePasswords()">
+            <input name="username" placeholder="Chọn tên đăng nhập" required>
+            <input name="password" id="password" type="password" placeholder="Mật khẩu" required>
+            <input name="confirm_password" id="confirm_password" type="password" placeholder="Nhập lại mật khẩu" required>
+            
+            <div id="error-message">Mật khẩu nhập lại chưa khớp!</div>
+            
+            <button id="registerButton" type="submit" disabled>Tạo tài khoản</button>
+        </form>
+        <p><a href="/login">Quay lại Đăng nhập</a></p>
+    </div>
+
+    <script>
+        const password = document.getElementById('password');
+        const confirmPassword = document.getElementById('confirm_password');
+        const registerButton = document.getElementById('registerButton');
+        const errorMessage = document.getElementById('error-message');
+
+        function checkPasswords() {
+            const pwd = password.value;
+            const confPwd = confirmPassword.value;
+            
+            if (pwd && confPwd) {
+                if (pwd !== confPwd) {
+                    errorMessage.style.display = 'block';
+                    registerButton.disabled = true;
+                } else {
+                    errorMessage.style.display = 'none';
+                    registerButton.disabled = false;
+                }
+            } else {
+                errorMessage.style.display = 'none';
+                registerButton.disabled = true;
+            }
+        }
+
+        password.addEventListener('input', checkPasswords);
+        confirmPassword.addEventListener('input', checkPasswords);
+
+        function validatePasswords() {
+            return password.value === confirmPassword.value;
+        }
+    </script>       
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <script>
+          {% for category, message in messages %}
+            Swal.fire({
+              title: 'Thông báo',
+              text: "{{ message }}",
+              icon: "{{ 'success' if category == 'success' else 'error' }}",
+              background: '#1e293b',
+              color: '#f8fafc',
+              confirmButtonColor: '#6366f1'
+            });
+          {% endfor %}
+        </script>
+      {% endif %}
+    {% endwith %}
+</body>
+</html>
